@@ -192,6 +192,39 @@ export type Database = {
         }
         Relationships: []
       }
+      rider_profiles: {
+        Row: {
+          created_at: string
+          current_lat: number | null
+          current_lng: number | null
+          is_active: boolean
+          location_is_demo: boolean
+          location_updated_at: string | null
+          user_id: string
+          vehicle_type: Database["public"]["Enums"]["vehicle_type"]
+        }
+        Insert: {
+          created_at?: string
+          current_lat?: number | null
+          current_lng?: number | null
+          is_active?: boolean
+          location_is_demo?: boolean
+          location_updated_at?: string | null
+          user_id: string
+          vehicle_type: Database["public"]["Enums"]["vehicle_type"]
+        }
+        Update: {
+          created_at?: string
+          current_lat?: number | null
+          current_lng?: number | null
+          is_active?: boolean
+          location_is_demo?: boolean
+          location_updated_at?: string | null
+          user_id?: string
+          vehicle_type?: Database["public"]["Enums"]["vehicle_type"]
+        }
+        Relationships: []
+      }
       service_areas: {
         Row: {
           center_lat: number
@@ -245,6 +278,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      accept_order: { Args: { p_order_id: string }; Returns: string }
       create_order: {
         Args: {
           p_care: boolean
@@ -260,6 +294,26 @@ export type Database = {
           p_vehicle: Database["public"]["Enums"]["vehicle_type"]
         }
         Returns: string
+      }
+      get_available_orders: {
+        Args: {
+          p_priority?: Database["public"]["Enums"]["order_priority"]
+          p_radius_km?: number
+          p_sort?: string
+        }
+        Returns: {
+          created_at: string
+          handle_with_care: boolean
+          id: string
+          parcel_summary: string
+          pickup_address: string
+          pickup_distance_km: number
+          pickup_lat: number
+          pickup_lng: number
+          priority: Database["public"]["Enums"]["order_priority"]
+          status: Database["public"]["Enums"]["order_status"]
+          vehicle_type: Database["public"]["Enums"]["vehicle_type"]
+        }[]
       }
       has_role: {
         Args: {
@@ -282,6 +336,33 @@ export type Database = {
           p_vehicle: Database["public"]["Enums"]["vehicle_type"]
         }
         Returns: Json
+      }
+      register_rider: {
+        Args: { p_vehicle: Database["public"]["Enums"]["vehicle_type"] }
+        Returns: undefined
+      }
+      require_active_rider: {
+        Args: never
+        Returns: {
+          created_at: string
+          current_lat: number | null
+          current_lng: number | null
+          is_active: boolean
+          location_is_demo: boolean
+          location_updated_at: string | null
+          user_id: string
+          vehicle_type: Database["public"]["Enums"]["vehicle_type"]
+        }
+        SetofOptions: {
+          from: "*"
+          to: "rider_profiles"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
+      update_rider_location: {
+        Args: { p_is_demo: boolean; p_lat: number; p_lng: number }
+        Returns: string
       }
     }
     Enums: {
