@@ -15,6 +15,7 @@ import { Route as AdminRouteImport } from './routes/admin'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as RiderRouteImport } from './routes/rider'
 import { Route as AuthenticatedCustomerIndexRouteImport } from './routes/_authenticated/customer.index'
+import { Route as AuthenticatedCustomerBookRouteImport } from './routes/_authenticated/customer.book'
 import { Route as AuthenticatedCustomerOrdersIndexRouteImport } from './routes/_authenticated/customer.orders.index'
 import { Route as AuthenticatedCustomerOrdersOrderIdRouteImport } from './routes/_authenticated/customer.orders.$orderId'
 
@@ -48,6 +49,12 @@ const AuthenticatedCustomerIndexRoute =
     path: '/customer/',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedCustomerBookRoute =
+  AuthenticatedCustomerBookRouteImport.update({
+    id: '/customer/book',
+    path: '/customer/book',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedCustomerOrdersIndexRoute =
   AuthenticatedCustomerOrdersIndexRouteImport.update({
     id: '/customer/orders/',
@@ -66,6 +73,7 @@ export interface FileRoutesByFullPath {
   '/admin': typeof AdminRoute
   '/auth': typeof AuthRoute
   '/rider': typeof RiderRoute
+  '/customer/book': typeof AuthenticatedCustomerBookRoute
   '/customer/': typeof AuthenticatedCustomerIndexRoute
   '/customer/orders/$orderId': typeof AuthenticatedCustomerOrdersOrderIdRoute
   '/customer/orders/': typeof AuthenticatedCustomerOrdersIndexRoute
@@ -75,6 +83,7 @@ export interface FileRoutesByTo {
   '/admin': typeof AdminRoute
   '/auth': typeof AuthRoute
   '/rider': typeof RiderRoute
+  '/customer/book': typeof AuthenticatedCustomerBookRoute
   '/customer': typeof AuthenticatedCustomerIndexRoute
   '/customer/orders/$orderId': typeof AuthenticatedCustomerOrdersOrderIdRoute
   '/customer/orders': typeof AuthenticatedCustomerOrdersIndexRoute
@@ -86,6 +95,7 @@ export interface FileRoutesById {
   '/admin': typeof AdminRoute
   '/auth': typeof AuthRoute
   '/rider': typeof RiderRoute
+  '/_authenticated/customer/book': typeof AuthenticatedCustomerBookRoute
   '/_authenticated/customer/': typeof AuthenticatedCustomerIndexRoute
   '/_authenticated/customer/orders/$orderId': typeof AuthenticatedCustomerOrdersOrderIdRoute
   '/_authenticated/customer/orders/': typeof AuthenticatedCustomerOrdersIndexRoute
@@ -97,6 +107,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/auth'
     | '/rider'
+    | '/customer/book'
     | '/customer/'
     | '/customer/orders/$orderId'
     | '/customer/orders/'
@@ -106,6 +117,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/auth'
     | '/rider'
+    | '/customer/book'
     | '/customer'
     | '/customer/orders/$orderId'
     | '/customer/orders'
@@ -116,6 +128,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/auth'
     | '/rider'
+    | '/_authenticated/customer/book'
     | '/_authenticated/customer/'
     | '/_authenticated/customer/orders/$orderId'
     | '/_authenticated/customer/orders/'
@@ -173,6 +186,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedCustomerIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/customer/book': {
+      id: '/_authenticated/customer/book'
+      path: '/customer/book'
+      fullPath: '/customer/book'
+      preLoaderRoute: typeof AuthenticatedCustomerBookRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/customer/orders/': {
       id: '/_authenticated/customer/orders/'
       path: '/customer/orders'
@@ -191,12 +211,14 @@ declare module '@tanstack/react-router' {
 }
 
 interface AuthenticatedRouteRouteChildren {
+  AuthenticatedCustomerBookRoute: typeof AuthenticatedCustomerBookRoute
   AuthenticatedCustomerIndexRoute: typeof AuthenticatedCustomerIndexRoute
   AuthenticatedCustomerOrdersOrderIdRoute: typeof AuthenticatedCustomerOrdersOrderIdRoute
   AuthenticatedCustomerOrdersIndexRoute: typeof AuthenticatedCustomerOrdersIndexRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedCustomerBookRoute: AuthenticatedCustomerBookRoute,
   AuthenticatedCustomerIndexRoute: AuthenticatedCustomerIndexRoute,
   AuthenticatedCustomerOrdersOrderIdRoute:
     AuthenticatedCustomerOrdersOrderIdRoute,

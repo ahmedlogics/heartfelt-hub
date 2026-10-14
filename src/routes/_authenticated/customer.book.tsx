@@ -32,7 +32,7 @@ export const Route = createFileRoute("/_authenticated/customer/book")({
   pendingComponent: () => <DashboardShell role="Customer" title="New delivery" items={customerNav("book")}><CardSkeleton rows={6} /></DashboardShell>,
   errorComponent: ({ error }) => {
     const router = useRouter();
-    return <div className="p-8"><ErrorState description={error.message} /><Button className="mt-4" onClick={() => router.invalidate()}>Retry</Button></div>;
+    return <div className="p-8"><ErrorState description={(error as Error).message} /><Button className="mt-4" onClick={() => router.invalidate()}>Retry</Button></div>;
   },
   notFoundComponent: () => <div className="p-8">Not found.</div>,
   component: Book,

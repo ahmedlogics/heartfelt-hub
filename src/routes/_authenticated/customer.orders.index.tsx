@@ -13,7 +13,7 @@ import { ACTIVE_STATUSES, formatPKR, myOrdersQuery } from "@/features/orders/ord
 type Tab = "all" | "active" | "delivered";
 
 export const Route = createFileRoute("/_authenticated/customer/orders/")({
-  validateSearch: (s: Record<string, unknown>): { tab: Tab } => ({ tab: s["tab"] === "active" || s["tab"] === "delivered" ? s["tab"] : "all" }),
+  validateSearch: (s: Record<string, unknown>): { tab?: Tab } => (s["tab"] === "active" || s["tab"] === "delivered" ? { tab: s["tab"] } : {}),
   head: () => ({
     meta: [
       { title: "My orders — LogiPulse" },
@@ -28,14 +28,14 @@ export const Route = createFileRoute("/_authenticated/customer/orders/")({
   pendingComponent: () => <DashboardShell role="Customer" title="My orders" items={customerNav("orders")}><CardSkeleton rows={5} /></DashboardShell>,
   errorComponent: ({ error }) => {
     const router = useRouter();
-    return <div className="p-8"><ErrorState description={error.message} /><Button className="mt-4" onClick={() => router.invalidate()}>Retry</Button></div>;
+    return <div className="p-8"><ErrorState description={(error as Error).message} /><Button className="mt-4" onClick={() => router.invalidate()}>Retry</Button></div>;
   },
   notFoundComponent: () => <div className="p-8">Not found.</div>,
   component: Orders,
 });
 
 function Orders() {
-  const { tab } = Route.useSearch();
+  const { tab = "all" } = Route.useSearch();
   const navigate = useNavigate({ from: "/customer/orders/" });
   const { data } = useSuspenseQuery(myOrdersQuery);
   const list = data.filter((o) => (tab === "active" ? ACTIVE_STATUSES.includes(o.status) : tab === "delivered" ? o.status === "DELIVERED" : true));
