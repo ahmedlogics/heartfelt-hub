@@ -3,11 +3,11 @@ import { Lock } from "lucide-react";
 import { Logo } from "@/components/shared/Logo";
 import { Button } from "@/components/ui/button";
 
-type Search = { intent?: "customer" | "rider" };
+type Search = { intent?: "customer" | "rider" | undefined };
 
 export const Route = createFileRoute("/auth")({
   validateSearch: (s: Record<string, unknown>): Search => ({
-    intent: s.intent === "customer" || s.intent === "rider" ? s.intent : undefined,
+    intent: s["intent"] === "customer" || s["intent"] === "rider" ? s["intent"] : undefined,
   }),
   head: () => ({
     meta: [
