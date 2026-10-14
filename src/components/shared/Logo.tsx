@@ -7,7 +7,7 @@ export function Logo() {
       <span className="grid size-8 place-items-center rounded-lg bg-gradient-signal text-primary-foreground shadow-glow">
         <Activity className="size-4" />
       </span>
-      Logi<span className="text-gradient">Pulse</span>
+      <span>Logi<span className="text-gradient">Pulse</span></span>
     </Link>
   );
 }
