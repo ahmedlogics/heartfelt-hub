@@ -13,7 +13,6 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as AuthRouteImport } from './routes/auth'
-import { Route as RiderRouteImport } from './routes/rider'
 import { Route as AuthenticatedCustomerIndexRouteImport } from './routes/_authenticated/customer.index'
 import { Route as AuthenticatedCustomerBookRouteImport } from './routes/_authenticated/customer.book'
 import { Route as AuthenticatedCustomerOrdersIndexRouteImport } from './routes/_authenticated/customer.orders.index'
@@ -36,11 +35,6 @@ const AdminRoute = AdminRouteImport.update({
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
   path: '/auth',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const RiderRoute = RiderRouteImport.update({
-  id: '/rider',
-  path: '/rider',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthenticatedCustomerIndexRoute =
@@ -72,7 +66,6 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
   '/auth': typeof AuthRoute
-  '/rider': typeof RiderRoute
   '/customer/book': typeof AuthenticatedCustomerBookRoute
   '/customer/': typeof AuthenticatedCustomerIndexRoute
   '/customer/orders/$orderId': typeof AuthenticatedCustomerOrdersOrderIdRoute
@@ -82,7 +75,6 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
   '/auth': typeof AuthRoute
-  '/rider': typeof RiderRoute
   '/customer/book': typeof AuthenticatedCustomerBookRoute
   '/customer': typeof AuthenticatedCustomerIndexRoute
   '/customer/orders/$orderId': typeof AuthenticatedCustomerOrdersOrderIdRoute
@@ -94,7 +86,6 @@ export interface FileRoutesById {
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/admin': typeof AdminRoute
   '/auth': typeof AuthRoute
-  '/rider': typeof RiderRoute
   '/_authenticated/customer/book': typeof AuthenticatedCustomerBookRoute
   '/_authenticated/customer/': typeof AuthenticatedCustomerIndexRoute
   '/_authenticated/customer/orders/$orderId': typeof AuthenticatedCustomerOrdersOrderIdRoute
@@ -106,7 +97,6 @@ export interface FileRouteTypes {
     | '/'
     | '/admin'
     | '/auth'
-    | '/rider'
     | '/customer/book'
     | '/customer/'
     | '/customer/orders/$orderId'
@@ -116,7 +106,6 @@ export interface FileRouteTypes {
     | '/'
     | '/admin'
     | '/auth'
-    | '/rider'
     | '/customer/book'
     | '/customer'
     | '/customer/orders/$orderId'
@@ -127,7 +116,6 @@ export interface FileRouteTypes {
     | '/_authenticated'
     | '/admin'
     | '/auth'
-    | '/rider'
     | '/_authenticated/customer/book'
     | '/_authenticated/customer/'
     | '/_authenticated/customer/orders/$orderId'
@@ -139,7 +127,6 @@ export interface RootRouteChildren {
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AdminRoute: typeof AdminRoute
   AuthRoute: typeof AuthRoute
-  RiderRoute: typeof RiderRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -170,13 +157,6 @@ declare module '@tanstack/react-router' {
       path: '/auth'
       fullPath: '/auth'
       preLoaderRoute: typeof AuthRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/rider': {
-      id: '/rider'
-      path: '/rider'
-      fullPath: '/rider'
-      preLoaderRoute: typeof RiderRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated/customer/': {
@@ -233,7 +213,6 @@ const rootRouteChildren: RootRouteChildren = {
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AdminRoute: AdminRoute,
   AuthRoute: AuthRoute,
-  RiderRoute: RiderRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
