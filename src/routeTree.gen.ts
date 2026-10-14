@@ -10,14 +10,21 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as AuthRouteImport } from './routes/auth'
-import { Route as CustomerRouteImport } from './routes/customer'
 import { Route as RiderRouteImport } from './routes/rider'
+import { Route as AuthenticatedCustomerIndexRouteImport } from './routes/_authenticated/customer.index'
+import { Route as AuthenticatedCustomerOrdersIndexRouteImport } from './routes/_authenticated/customer.orders.index'
+import { Route as AuthenticatedCustomerOrdersOrderIdRouteImport } from './routes/_authenticated/customer.orders.$orderId'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
+  id: '/_authenticated',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminRoute = AdminRouteImport.update({
@@ -30,52 +37,95 @@ const AuthRoute = AuthRouteImport.update({
   path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
-const CustomerRoute = CustomerRouteImport.update({
-  id: '/customer',
-  path: '/customer',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const RiderRoute = RiderRouteImport.update({
   id: '/rider',
   path: '/rider',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedCustomerIndexRoute =
+  AuthenticatedCustomerIndexRouteImport.update({
+    id: '/customer/',
+    path: '/customer/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedCustomerOrdersIndexRoute =
+  AuthenticatedCustomerOrdersIndexRouteImport.update({
+    id: '/customer/orders/',
+    path: '/customer/orders/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedCustomerOrdersOrderIdRoute =
+  AuthenticatedCustomerOrdersOrderIdRouteImport.update({
+    id: '/customer/orders/$orderId',
+    path: '/customer/orders/$orderId',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
   '/auth': typeof AuthRoute
-  '/customer': typeof CustomerRoute
   '/rider': typeof RiderRoute
+  '/customer/': typeof AuthenticatedCustomerIndexRoute
+  '/customer/orders/$orderId': typeof AuthenticatedCustomerOrdersOrderIdRoute
+  '/customer/orders/': typeof AuthenticatedCustomerOrdersIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
   '/auth': typeof AuthRoute
-  '/customer': typeof CustomerRoute
   '/rider': typeof RiderRoute
+  '/customer': typeof AuthenticatedCustomerIndexRoute
+  '/customer/orders/$orderId': typeof AuthenticatedCustomerOrdersOrderIdRoute
+  '/customer/orders': typeof AuthenticatedCustomerOrdersIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/admin': typeof AdminRoute
   '/auth': typeof AuthRoute
-  '/customer': typeof CustomerRoute
   '/rider': typeof RiderRoute
+  '/_authenticated/customer/': typeof AuthenticatedCustomerIndexRoute
+  '/_authenticated/customer/orders/$orderId': typeof AuthenticatedCustomerOrdersOrderIdRoute
+  '/_authenticated/customer/orders/': typeof AuthenticatedCustomerOrdersIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/admin' | '/auth' | '/customer' | '/rider'
+  fullPaths:
+    | '/'
+    | '/admin'
+    | '/auth'
+    | '/rider'
+    | '/customer/'
+    | '/customer/orders/$orderId'
+    | '/customer/orders/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/admin' | '/auth' | '/customer' | '/rider'
-  id: '__root__' | '/' | '/admin' | '/auth' | '/customer' | '/rider'
+  to:
+    | '/'
+    | '/admin'
+    | '/auth'
+    | '/rider'
+    | '/customer'
+    | '/customer/orders/$orderId'
+    | '/customer/orders'
+  id:
+    | '__root__'
+    | '/'
+    | '/_authenticated'
+    | '/admin'
+    | '/auth'
+    | '/rider'
+    | '/_authenticated/customer/'
+    | '/_authenticated/customer/orders/$orderId'
+    | '/_authenticated/customer/orders/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AdminRoute: typeof AdminRoute
   AuthRoute: typeof AuthRoute
-  CustomerRoute: typeof CustomerRoute
   RiderRoute: typeof RiderRoute
 }
 
@@ -86,6 +136,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin': {
@@ -102,13 +159,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/customer': {
-      id: '/customer'
-      path: '/customer'
-      fullPath: '/customer'
-      preLoaderRoute: typeof CustomerRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/rider': {
       id: '/rider'
       path: '/rider'
@@ -116,14 +166,51 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RiderRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/customer/': {
+      id: '/_authenticated/customer/'
+      path: '/customer'
+      fullPath: '/customer/'
+      preLoaderRoute: typeof AuthenticatedCustomerIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/customer/orders/': {
+      id: '/_authenticated/customer/orders/'
+      path: '/customer/orders'
+      fullPath: '/customer/orders/'
+      preLoaderRoute: typeof AuthenticatedCustomerOrdersIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/customer/orders/$orderId': {
+      id: '/_authenticated/customer/orders/$orderId'
+      path: '/customer/orders/$orderId'
+      fullPath: '/customer/orders/$orderId'
+      preLoaderRoute: typeof AuthenticatedCustomerOrdersOrderIdRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
   }
 }
 
+interface AuthenticatedRouteRouteChildren {
+  AuthenticatedCustomerIndexRoute: typeof AuthenticatedCustomerIndexRoute
+  AuthenticatedCustomerOrdersOrderIdRoute: typeof AuthenticatedCustomerOrdersOrderIdRoute
+  AuthenticatedCustomerOrdersIndexRoute: typeof AuthenticatedCustomerOrdersIndexRoute
+}
+
+const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedCustomerIndexRoute: AuthenticatedCustomerIndexRoute,
+  AuthenticatedCustomerOrdersOrderIdRoute:
+    AuthenticatedCustomerOrdersOrderIdRoute,
+  AuthenticatedCustomerOrdersIndexRoute: AuthenticatedCustomerOrdersIndexRoute,
+}
+
+const AuthenticatedRouteRouteWithChildren =
+  AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AdminRoute: AdminRoute,
   AuthRoute: AuthRoute,
-  CustomerRoute: CustomerRoute,
   RiderRoute: RiderRoute,
 }
 export const routeTree = rootRouteImport
